@@ -157,7 +157,7 @@
                 }
             }); */                                                                      
             
-            var dataset = [
+            /*var dataset = [
               [5,   20],
               [480, 90],
               [250, 50],
@@ -169,9 +169,22 @@
               [85,  21],
               [220, 88],
               [600, 150]  
-            ];
+            ];*/
+            
+            //Dynamic, random dataset
+            var dataset = [];
+            var numDataPoints = 50;
+            var xRange = Math.random() * 1000;
+            var yRange = Math.random() * 1000;
+            for(var i = 0; i < numDataPoints; i++){
+                var newNumber1 = Math.floor(Math.random() * xRange);
+                var newNumber2 = Math.floor(Math.random() * yRange);
+                dataset.push([newNumber1, newNumber2]);
+            }
            
-            var padding = 20;
+            var padding = 30;
+            var formatAsPercentage = d3.format(".1%"); //strange format
+            //scales
             var xScale = d3.scale.linear()
                                 .domain([0,d3.max(dataset, function(d){ return d[0];})])
                                 .range([padding,w-padding *2]);
@@ -182,14 +195,26 @@
             var rScale = d3.scale.linear()
                                 .domain([0, d3.max(dataset, function(d){return d[1];})])
                                 .range([2,5]);
-                      
+            var xAxis = d3.svg.axis() //axis
+                                .scale(xScale)
+                                .orient("bottom")
+                                .tickFormat(formatAsPercentage) // percent format added
+                                .ticks(5);  //Set rough # of ticks
+            var yAxis = d3.svg.axis()
+                                .scale(yScale)
+                                .orient("left")
+                                .ticks(5);
+            
+                    
+            //svg          
             var svg2 = d3.select("body")
                             .append("svg")
                             .attr({
                                 width: w,
                                 height: h
                             });
-                        
+            
+            //create circles            
             svg2.selectAll("circle")
                 .data(dataset)
                 .enter()
@@ -200,6 +225,8 @@
                     r: function(d){ return rScale(d[1]);}
                 });
             
+            /*
+            //create labels
             svg2.selectAll("text")
                 .data(dataset)
                 .enter()
@@ -212,8 +239,18 @@
                 .attr("font-family", "sans-serif")
                 .attr("font-size", "11px")
                 .attr("fill", "red");
+            */
             
-            
+            //add axis
+            svg2.append("g")
+                .attr("class","axis")
+                .attr("transform","translate(0," + (h-padding) + ")")
+                .call(xAxis);
+           
+            svg2.append("g")
+                .attr("class","axis")
+                .attr("transform","translate(" + padding + ",0)")
+                .call(yAxis);
                 
             
         </script>
