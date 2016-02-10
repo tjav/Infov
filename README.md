@@ -1,3 +1,2 @@
 # Infov
-# Infov
-# Visual
+This is an exercise project.
