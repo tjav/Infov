@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="d3/d3.min.js"></script>
+        <link href="style.css"  rel="stylesheet" type="text/css"/> 
+    </head>
+    <body>
+        <script>
+            d3.select("body")
+                .append("p")
+                .text("Hello world");
+        
+           /* d3.select("body")
+                .append("svg")
+                .attr("width",50)
+                .attr("height",50)
+                .append("circle")
+                .attr("cx",25)
+                .attr("cy",25)
+                .attr("r",25)
+                .style("fill","purple");*/
+        
+            var data = [5,10,15,20,30,30,30,25,20,15,10,5];
+            
+            var w = 500;
+            var h = 200;
+            var barPadding = 1;
+            
+            var svg = d3.select("body")
+                            .append("svg")
+                            .attr("height", h)
+                            .attr("width", w);
+            
+            svg.selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr({
+                    x: function(d,i){ return i* (w / data.length);},
+                    y: function(d){ return h - (d*4);},
+                    width: w/ data.length - barPadding,
+                    height: function(d){return d*4 ;},
+                    fill: function(d){ return "rgb(0, 0, "+ (d * 10) + ")"}
+                });
+                
+            svg.selectAll("text")
+                .data(data)
+                .enter()
+                .append("text")
+                .text(function(d){
+                    return d;
+                })
+                .attr({
+                    x: function(d,i) {
+                      return i * (w / data.length) + (w/ data.length - barPadding) / 2;
+                    },
+                    y: function(d) {
+                      return h - (d * 4) + 14;
+                    }
+                })
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "11px")
+                .attr("fill","white")
+                .attr("text-anchor","middle");
+            
+            /*d3.select("body").selectAll("div")
+                .data(data)
+                .enter()
+                .append("div")
+                .attr("class", "bar")
+                .style("height",function(d){
+                    var barHeight = d*5;
+                    return barHeight + "px";
+                });
+                
+                
+            var circleRadii = [40,20,10];
+            
+            var svgContainer = d3.select("body").append("svg")
+                                                .attr("width",200)
+                                                .attr("height",200);
+                            
+            var circles = svgContainer.selectAll("circle")
+                                        .data(circleRadii)
+                                        .enter()
+                                        .append("circle");
+                                    
+            var circleAttributes = circles
+                                    .attr("cx",50)
+                                    .attr("cy",50)
+                                    .attr("r", function(d){return d;})
+                                    .style("fill",function(d){
+                                        var returnColor;
+                                        if (d===40)
+                                            returnColor = "green";
+                                        else if (d===20)
+                                            returnColor = "blue";
+                                        else
+                                            returnColor = "red";
+                                        return returnColor;
+                                    });
+            
+            var spaceCircles = [30,70,110];
+            
+            var svgContainer2 = d3.select("body").append("svg")
+                                                    .attr("width", 200)
+                                                    .attr("height",200)
+                                                    .style("border","1px solid black");
+                                                    
+            var circles2 = svgContainer2.selectAll("circle")
+                                        .data(spaceCircles)
+                                        .enter()
+                                        .append("circle");
+                                        
+            var circleAttributes2 = circles2
+                                        .attr("cx", function(d){return d;})
+                                        .attr("cy", function(d){return d;})
+                                        .attr("r", 20)
+                                        .style("fill",function(d){
+                                        var returnColor;
+                                        if (d===30)
+                                            returnColor = "green";
+                                        else if (d===70)
+                                            returnColor = "blue";
+                                        else
+                                            returnColor = "red";
+                                        return returnColor;
+                                    });
+                                        
+              var svgContainer3 = d3.select("body").append("svg")
+                                                    .attr("width", 610)
+                                                    .attr("height", 500);
+                                            
+              var rectangles = svgContainer3.selectAll("rect")
+                                                .data(data)
+                                                .enter()
+                                                .append("rect");
+                                                                    
+              var rectangleAttributes = rectangles
+                                        .attr("x", function(d,i){return (10+i*50);} )
+                                        .attr("y", function(d){var l = 490-(d*15); return l;})
+                                        .attr("width", 40)
+                                        .attr("height", function(d){return d*15;})
+                                        .style("fill","blue");
+            
+            var dataset;   
+            
+            d3.csv("data/meteo.csv", function(error, n){
+                if (error) {  //If error is not null, something went wrong.
+                     console.log(error);  //Log the error.
+                } else {      //If no error, the file loaded correctly. Yay!
+                     console.log(n);   //Log the data.
+                
+                dataset = n; //kopie van de data
+                 //visualisatie functie
+                 // laden laneten verdwijnen
+                }
+            }); */                                                                      
+            
+            var dataset = [
+              [5,   20],
+              [480, 90],
+              [250, 50],
+              [100, 33],
+              [330, 95],
+              [410, 12],
+              [475, 44],
+              [25,  67],
+              [85,  21],
+              [220, 88],
+              [600, 150]  
+            ];
+           
+            var padding = 20;
+            var xScale = d3.scale.linear()
+                                .domain([0,d3.max(dataset, function(d){ return d[0];})])
+                                .range([padding,w-padding *2]);
+            
+            var yScale = d3.scale.linear()
+                                .domain([0,d3.max(dataset, function(d){ return d[1];})])
+                                .range([h-padding,padding]);
+            var rScale = d3.scale.linear()
+                                .domain([0, d3.max(dataset, function(d){return d[1];})])
+                                .range([2,5]);
+                      
+            var svg2 = d3.select("body")
+                            .append("svg")
+                            .attr({
+                                width: w,
+                                height: h
+                            });
+                        
+            svg2.selectAll("circle")
+                .data(dataset)
+                .enter()
+                .append("circle")
+                .attr({
+                    cx: function(d){ return xScale(d[0]);},
+                    cy: function(d){ return yScale(d[1]);},
+                    r: function(d){ return rScale(d[1]);}
+                });
+            
+            svg2.selectAll("text")
+                .data(dataset)
+                .enter()
+                .append("text")
+                .text( function(d){ return d[0] + "," + d[1];})
+                .attr({
+                    x: function(d){ return xScale(d[0]);},
+                    y: function(d){ return yScale(d[1]);}
+                })
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "11px")
+                .attr("fill", "red");
+            
+            
+                
+            
+        </script>
+    </body>
+</html>
