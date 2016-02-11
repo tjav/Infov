@@ -355,12 +355,12 @@
             
             //add axis
             svg2.append("g")
-                .attr("class","axis")
+                .attr("class","x axis")
                 .attr("transform","translate(0," + (h-padding) + ")")
                 .call(xAxis);
            
             svg2.append("g")
-                .attr("class","axis")
+                .attr("class","y axis")
                 .attr("transform","translate(" + padding + ",0)")
                 .call(yAxis);
           
@@ -398,26 +398,39 @@
                              return i / dataset.length * 1000;
                          })
                          .duration(5000)
+                         .each("start", function(){ //<--- executes at the start of transition
+                             d3.select(this)
+                             //.transition() //blocks the process (overrides)
+                             //.duration(500) // but not in jQuery
+                                .attr({
+                                    fill: "magenta",
+                                    r: 5
+                                })
+                         })
                          .ease("elastic")
                          .attr({
                             cx: function(d){ return xScale(d[0]);},
                             cy: function(d){ return yScale(d[1]);},
-                            r: newR});
+                            r: newR})
+                         .each("end", function(){ // <--- end
+                            d3.select(this)
+                                //.transition() // Here we can use it
+                                //.duration(2000)
+                                .attr({
+                                    fill: "black",
+                                    r: newR
+                                })
+                         });
                      
-                     xAxis.scale(xScale);
-                     yAxis.scale(yScale);
-                     
-                     svg2.selectAll("g")
-                        .remove();
-                     
-                     svg2.append("g")
-                            .attr("class","axis")
-                            .attr("transform","translate(0," + (h-padding) + ")")
+                                         
+                     svg2.select(".x.axis")
+                            .transition()
+                            .duration(1000)
                             .call(xAxis);
            
-                    svg2.append("g")
-                            .attr("class","axis")
-                            .attr("transform","translate(" + padding + ",0)")
+                    svg2.select(".y.axis")
+                            .transition()
+                            .duration(1000)
                             .call(yAxis);
                 });
             
