@@ -35,6 +35,7 @@
             var h = 250;
             var barPadding = 1;
             var padding = 30;
+            var maxValue = 30;
             
             //scale x and y axis
             var xScale = d3.scale.ordinal()
@@ -110,12 +111,11 @@
                     var numValues = data.length;
                     data = [];
                     for(var i = 0; i < numValues; i++){
-                        var newNumber = Math.floor(Math.random() * 30);
+                        var newNumber = Math.floor(Math.random() * maxValue);
                         data.push(newNumber);
                     }                    
                                         
-                    var yScale = d3.scale.linear()
-                                    .domain([0,d3.max(data, function(d){ return d;})])
+                    yScale.domain([0,d3.max(data, function(d){ return d;})])
                                     .range([h-padding,padding]);
                     var xScale = d3.scale.ordinal()
                                     .domain(d3.range(data.length))
@@ -277,7 +277,13 @@
               [220, 88],
               [600, 150]  
             ];*/
+            </script>
+            <p class="scatter">Click for scatter</p> 
+            <script>
+            //////////////////////////////////
+            //SCATTERPLOT
             
+            var newR = 3;
             //Dynamic, random dataset
             var dataset = [];
             var numDataPoints = 50;
@@ -304,7 +310,7 @@
             var xAxis = d3.svg.axis() //axis
                                 .scale(xScale)
                                 .orient("bottom")
-                                .tickFormat(formatAsPercentage) // percent format added
+                                        // .tickFormat(formatAsPercentage) // percent format added
                                 .ticks(5);  //Set rough # of ticks
             var yAxis = d3.svg.axis()
                                 .scale(yScale)
@@ -358,7 +364,64 @@
                 .attr("transform","translate(" + padding + ",0)")
                 .call(yAxis);
           
-          
+              ///////////////////////////////  
+            //clickevent
+            d3.select("p.scatter")
+                .on("click", function(){
+                    //new values for dataset
+                    //svg.selectAll("circle")
+                     //   .data([])
+                      //  .exit();
+                    
+                    
+                    //random values for dataset
+                    var dataset = [];
+                    var numDataPoints = 50;
+                    var xRange = Math.random() * 1000;
+                    var yRange = Math.random() * 1000;
+                    for(var i = 0; i < numDataPoints; i++){
+                        var newNumber1 = Math.floor(Math.random() * xRange);
+                        var newNumber2 = Math.floor(Math.random() * yRange);
+                        dataset.push([newNumber1, newNumber2]);
+                    }
+                    // update scale
+                    xScale.domain([0,d3.max(dataset, function(d){ return d[0];})])
+                                .range([padding,w-padding *2]);
+            
+                    yScale.domain([0,d3.max(dataset, function(d){ return d[1];})])
+                                .range([h-padding,padding]);
+                    //update all rects
+                    svg2.selectAll("circle")
+                         .data(dataset)
+                         .transition()
+                         .delay(function(d,i){
+                             return i / dataset.length * 1000;
+                         })
+                         .duration(5000)
+                         .ease("elastic")
+                         .attr({
+                            cx: function(d){ return xScale(d[0]);},
+                            cy: function(d){ return yScale(d[1]);},
+                            r: newR});
+                     
+                     xAxis.scale(xScale);
+                     yAxis.scale(yScale);
+                     
+                     svg2.selectAll("g")
+                        .remove();
+                     
+                     svg2.append("g")
+                            .attr("class","axis")
+                            .attr("transform","translate(0," + (h-padding) + ")")
+                            .call(xAxis);
+           
+                    svg2.append("g")
+                            .attr("class","axis")
+                            .attr("transform","translate(" + padding + ",0)")
+                            .call(yAxis);
+                });
+            
+                   
           
           ///////////////////////
           //old barchart  
