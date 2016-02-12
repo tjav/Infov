@@ -244,7 +244,7 @@
             
             d3.csv("data/meteo.csv", function(error, n){
                 if (error) {  //If error is not null, something went wrong.
-                     console.log(error);  //Log the error.
+                     alert("werkt niet");  //Log the error.
                 } else {      //If no error, the file loaded correctly. Yay!
                      console.log(n);   //Log the data.
                 
@@ -325,7 +325,20 @@
                                 width: w,
                                 height: h
                             });
+                            
+            //COntaining visual elements with clipping paths
             
+          //Define clipping path
+          svg2.append("clipPath")
+                .attr("id", "chart-area")
+                .append("rect")
+                .attr({
+                    x: padding,
+                    y: padding,
+                    width: w-padding *3,
+                    height: h - padding * 2
+                    });
+           /* 
             //create circles            
             svg2.selectAll("circle")
                 .data(dataset)
@@ -335,7 +348,9 @@
                     cx: function(d){ return xScale(d[0]);},
                     cy: function(d){ return yScale(d[1]);},
                     r: function(d){ return rScale(d[1]);}
-                });
+                });*/
+                
+                
             
             /*
             //create labels
@@ -352,6 +367,19 @@
                 .attr("font-size", "11px")
                 .attr("fill", "red");
             */
+            
+            svg2.append("g")
+                .attr("id", "circles")
+                .attr("clip-path", "url(#chart-area)") //reference to clipPath
+                .selectAll("circle")
+                .data(dataset)
+                .enter()
+                .append("circle")
+                .attr({
+                    cx: function(d){ return xScale(d[0]);},
+                    cy: function(d){ return yScale(d[1]);},
+                    r: function(d){ return rScale(d[1]);}
+                });
             
             //add axis
             svg2.append("g")
@@ -433,9 +461,11 @@
                             .duration(1000)
                             .call(yAxis);
                 });
+           
             
-                   
-          
+           
+                         
+         
           ///////////////////////
           //old barchart  
             /*
