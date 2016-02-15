@@ -19,3 +19,24 @@ div.bar {
     font-family: sans-serif;
     font-size: 11px;
 }
+
+/* rectangle hover*/
+rect {
+    -moz-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+rect:hover {
+    fill: orange;
+}
+
+/* mouse events on some elements (such as our value labels) to be ignored */
+svg text {
+    pointer-events: none;
+}
+
+circle:hover {
+    fill: chartreuse;
+}

@@ -68,6 +68,17 @@
                     width:  xScale.rangeBand(),
                     height: function(d){return h-yScale(d)-padding ;},
                     fill:   function(d){ return "rgb(0, 0, "+ (d * 10) + ")"}
+                })
+                .on( "click", function(d){ sortBars();})
+                .on("mouseover", function(d){
+                    d3.select(this)
+                        .attr("fill", "orange");
+                })
+                .on("mouseout", function(d){
+                        d3.select(this)
+                            .transition()
+                            .duration(250)
+                            .attr("fill", "rgb(0,0,"+ (d*10) + ")");    
                 });
                 
             svg.selectAll("text")
@@ -102,9 +113,9 @@
                 .on("click", function(){
                     //iets
                     //new values for dataset
-                    svg.selectAll("rect")
-                        .data([])
-                        .exit();
+                   // svg.selectAll("rect")
+                   //     .data([])
+                   //     .exit();
                     //var data = [8,9,10,13,24,26,13,9,9,10,21,29];
                     
                     //random values for dataset
@@ -121,7 +132,6 @@
                                     .domain(d3.range(data.length))
                                    .rangeRoundBands([0,w-padding], 0.05);
             
-                    //update all rects
                     svg.selectAll("rect")
                         .data(data)
                         .transition()
@@ -155,7 +165,62 @@
                             .attr("y", function(d) {
                                 return yScale(d) + 14;
                             });
+                    /*
+                    //Select...
+                    var bars = svg.selectAll("rect")
+                                    .data(data);
+                    
+                    //Enter..
+                    bars.enter()
+                        .append("rect")
+                        .attr({
+                            x:      w,
+                            y:      function(d){ return yScale(d);},
+                            width:  xScale.rangeBand(),
+                            height: function(d){return h-yScale(d)-padding ;},
+                            fill:   function(d){ return "rgb(0,0,"+ (d * 10) + ")";}
+                        });
+                    
+                    //Update...
+                    bars.transition()
+                        .delay(function(d,i){
+                            return i / data.length * 1000;
+                        })                // .delay(1000) //delays the proces with 1 second
+                        .duration(4000)
+                        .ease("linear") // "bounce" "circle" "elastic"
+                        .attr({
+                            x:      function(d, i){ return xScale(i)+padding;},
+                            y:      function(d){ return yScale(d);},
+                            width:  xScale.rangeBand(),
+                            height: function(d){return h-yScale(d)-padding ;}
+                            
+                        });*/
+                   /* 
+                    //Remove one value from dataset
+                    dataset.shift();
+                    
+                    //Exit…
+                        bars.exit()
+                            .transition()
+                            .duration(500)
+                            .attr("x", w)
+                            .remove();*/
+                    
+                        
+                    
                 });
+                
+                //function to sort the rectangles
+                var sortBars = function(){
+                    svg.selectAll("rect")
+                        .sort(function(a,b){
+                            return d3.ascending(a,b);
+                        })
+                        .transition()
+                        .duration(1000)
+                        .attr("x", function(d,i){ return xScale(i);});
+                };
+                    
             
           ///////////////////////////
           
